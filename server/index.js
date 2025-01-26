@@ -27,25 +27,25 @@ const handleMessage = (bytes, roomId) => {
     broadcast(roomId)
 }
 
-// const handleClose = (roomId,player) => {
-//     console.log(`Player ${player} disconnected. Closing ${roomId}`)
-//     console.log(player)
-//     // console.log(rooms)
-//     Object.keys(rooms[roomId]).forEach(player => {
-//         const connection = rooms[roomId][player]
-//         console.log(`closing and deleting ${player}`)
-//         delete rooms[roomId][player]
-//         // console.log(rooms)
-//         connection.close()
-//     })
-
-//     if(Object.keys(rooms[roomId]).length === 0){
-//         console.log(rooms)
-//         console.log(playerMoves)
-//         delete rooms[roomId]
-//         delete playerMoves[roomId]
-//     }
-// }
+const handleClose = (roomId) => {
+    
+    const firstPlayer = Object.keys(playerMoves[roomId])[0]
+    // Delete the first player's moves from the room
+    delete playerMoves[roomId][firstPlayer]
+    //everytime a player disconnects this code is called and we close both player connections so for the player who didnt close his connection the connection.on(close) function is called for him and this code is called again so if we deleted roomId from rooms here then when it tries to close from here again it wont find the connection to call the .close() function on and throw an error.
+    Object.keys(rooms[roomId]).forEach(player => {
+        rooms[roomId][player].close()
+    })
+    // console.log(playerMoves)
+    // console.log(Object.keys(playerMoves[roomId]).length)
+    if(Object.keys(playerMoves[roomId]).length === 0){
+        //we can safely remove the roomId from rooms and playerMoves db here as both player have disconnected and forEach has been called for both of them
+        delete rooms[roomId]
+        delete playerMoves[roomId]
+        // console.log(playerMoves)
+        // console.log(rooms)  
+    } 
+}
 
 //ws://localhost:8000?roomId=1234
 wss.on('connection', (connection, request) =>{
@@ -58,10 +58,16 @@ wss.on('connection', (connection, request) =>{
         if(Object.keys(rooms[roomId]).length < 2){
             //If there are less then 2 players
             rooms[roomId][2] = connection
-            player = 2
-            console.log('Player 2 connected')
+            console.log('Another player connected')
+            playerMoves[roomId] = {
+                1:[],
+                2:[]
+            }
+            broadcast(roomId)
+            //when i receive the playermoves with length == 2 for the first time i will set game start state to true.
+            //and if i receive the playerMoves with length == 1 i will set it to false.
             // console.log(rooms)
-            console.log(playerMoves)
+            // console.log(playerMoves)
         }
         else{
             console.log(`Room ${roomId} is full`)
@@ -69,25 +75,25 @@ wss.on('connection', (connection, request) =>{
         }
     } else{
         rooms[roomId]={
-            1:connection
+            1:connection,
         }
-        player = 1
         console.log('Player 1 connected')
         // console.log(rooms)
         // console.log(Object.keys(rooms[roomId]).length)
         playerMoves[roomId] = {
             1:[],
-            2:[]
         }
+        broadcast(roomId)
+        // console.log(rooms)
+        //broadcast playerMoves if theres only one in player moves that means in frontend clinet is player 1 and they will be waiting for player 2
     }
 
     connection.on("message", message => handleMessage(message, roomId))
 
     connection.on("close", ()=> {
-        handleClose(roomId, player)
+        handleClose(roomId)
     })
-    // i have to hanlde the case where the player 1 leaves, what to do? shift player 2 or add the newly connected player as player 1.
-
+    //currently closing all conncetion and removing roomId from rooms and playerMoves when one of the player disconnects.
 })
 
 
