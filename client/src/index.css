@@ -57,3 +57,76 @@ body{
     border-radius: 0.4em;
     cursor: pointer;
 }
+
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2em;
+    background-color: #2091F6;
+    border-radius: 1em;
+    max-width: 600px;
+    width: 90%;
+    margin: 2em auto;
+    color: aliceblue;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 2em;
+}
+
+.login-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    width: 100%;
+}
+
+.login-container input {
+    padding: 0.5em;
+    border-radius: 0.3em;
+    border: none;
+    outline: none;
+    font-size: 1em;
+}
+
+.login-container button {
+    padding: 0.5em;
+    border-radius: 0.3em;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+    background-color: aliceblue;
+    color: #2091F6;
+    font-weight: bold;
+}
+
+.login-container p{
+    padding-bottom: 0.35em;
+}
+
+/* Responsive Styles */
+@media (max-width: 600px) {
+    body {
+        flex-direction: column;
+        padding: 1em;
+    }
+    .board {
+        grid-template-rows: repeat(3, 1fr);
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.1em;
+        padding: 0.7em;
+    }
+    .cell {
+        font-size: 2em;
+        width: 3em;
+        height: 3em;
+    }
+    .info-board {
+        font-size: 1.5em;
+        padding: 0.5em;
+    }
+    .login-container {
+        max-width: 350px;
+        font-size: 1.2em;
+    }
+}

@@ -19,9 +19,9 @@ function Login({onSubmit}){
     }
 
     return(
-        <div>
+        <div className="login-container">
             <h1>Welcome</h1>
-            <p>Please enter a 4 digit number to create or join a room.</p>
+            <p>Create or Join a Room.</p>
             <form onSubmit={handleSubmit}>
                 <input 
                     type="text"
