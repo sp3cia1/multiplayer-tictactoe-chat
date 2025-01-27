@@ -28,7 +28,7 @@ const handleMessage = (bytes, roomId) => {
 }
 
 const handleClose = (roomId) => {
-    
+    console.log("A player disconnected closing and deleting the room")
     const firstPlayer = Object.keys(playerMoves[roomId])[0]
     // Delete the first player's moves from the room
     delete playerMoves[roomId][firstPlayer]
@@ -42,8 +42,8 @@ const handleClose = (roomId) => {
         //we can safely remove the roomId from rooms and playerMoves db here as both player have disconnected and forEach has been called for both of them
         delete rooms[roomId]
         delete playerMoves[roomId]
-        // console.log(playerMoves)
-        // console.log(rooms)  
+        console.log(playerMoves)
+        console.log(rooms)
     } 
 }
 
