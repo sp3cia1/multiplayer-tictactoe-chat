@@ -15,7 +15,7 @@ const playerMoves= { }
 function broadcast(roomId){
     Object.keys(rooms[roomId]).forEach(player => {
         const connection = rooms[roomId][player]
-        const msg = JSON.stringify(playerMoves)
+        const msg = JSON.stringify(playerMoves[roomId])
         connection.send(msg)
     })
 }
