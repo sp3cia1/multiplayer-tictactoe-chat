@@ -17,6 +17,7 @@ function broadcast(roomId){
         const connection = rooms[roomId][player]
         const msg = JSON.stringify(playerMoves[roomId])
         connection.send(msg)
+        console.log("sent message from server", msg)
     })
 }
 
@@ -24,6 +25,7 @@ function broadcast(roomId){
 const handleMessage = (bytes, roomId) => {
     const message = JSON.parse(bytes)
     playerMoves[roomId] = message
+    console.log("Message received on server", message)
     broadcast(roomId)
 }
 
@@ -42,7 +44,7 @@ const handleClose = (roomId) => {
         //we can safely remove the roomId from rooms and playerMoves db here as both player have disconnected and forEach has been called for both of them
         delete rooms[roomId]
         delete playerMoves[roomId]
-        console.log(playerMoves)
+        console.log("player moves after closing room", playerMoves)
         console.log(rooms)
     } 
 }

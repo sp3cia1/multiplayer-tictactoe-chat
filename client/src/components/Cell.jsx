@@ -3,9 +3,9 @@ function Cell(props){
 
     return(
         <div className="cell" 
-            // onClick={() => handleClick(id)}
+            onClick={() => handleClick(id)}
         >
-            {/* {p1Cells.includes(id) ? "X" : p2Cells.includes(id) ? "O" : " " } */}
+            {p1Cells.includes(id) ? "X" : p2Cells.includes(id) ? "O" : " " }
         </div>
     )
 }

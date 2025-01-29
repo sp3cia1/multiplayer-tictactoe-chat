@@ -8,17 +8,10 @@ import Login from "./components/Login"
 function App() {
   const [roomId, setRoomId] = useState("")
 
-  // const necessaryNums = [3,5,7] //every winning combination includes these numbers
-  // const winningCombinations =[
-  //   [3,5,7],[1,5,9],
-  //   [1,2,3],[4,5,6],[7,8,9],
-  //   [3,6,9],[2,5,8],[1,4,7]
-  // ]
 
   // const [currentPlayer, setCurrentPlayer] = useState('p1')
   // const [gameFinished, setGameFinished] = useState(false)
-  // const [p1Cells, setP1Cells] = useState([])
-  // const [p2Cells, setP2Cells] = useState([])
+  
 
 
   // function handleClick(id) {
