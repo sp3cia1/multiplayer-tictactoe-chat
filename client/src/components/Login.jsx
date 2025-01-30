@@ -6,8 +6,6 @@ function Login({onSubmit}){
     const [input, setInput] = useState("")
     const [error, setError] = useState("")
 
-    console.log(input)
-
     function handleSubmit(e){
         e.preventDefault();
         if (/^\d{4}$/.test(input)) {

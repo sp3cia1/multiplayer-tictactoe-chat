@@ -42,7 +42,7 @@ function Home({roomId}){
         const players = Object.keys(message);
 
         if (players.length === 2) {
-            if (!gameOver) { // Only start the game if it's not over, without this the gameStarted was automatically set to true after we set it to false.
+            if (!gameOver) { // Only start the game if it's not over
                 setGameStarted(true);
             }
         }
@@ -56,7 +56,7 @@ function Home({roomId}){
                 // Player 1 goes first
                 setIsMyTurn(player === 1);
             }
-        } else {
+        } else if (!gameOver) { // Only update turns if game is not over
             // Game is already started and we have both players
             if (players.length === 2) {
                 const moves = message;
@@ -73,7 +73,7 @@ function Home({roomId}){
     }
 
     const updateCells = (msg) => {
-        if(gameStarted){
+        if(gameStarted && !gameOver){ // Don't update cells if game is over
             if(msg[1].length !== p1Cells.length){
                 setP1Cells(msg[1])
             }
@@ -89,23 +89,14 @@ function Home({roomId}){
     };
 
     function checkWin(playerCells){
-        console.log("I was triggered")
-        console.log("player cells", playerCells )
-        console.log("player cells length", playerCells.length > 2 )
-        console.log("contains", playerCells.some(num => necessaryNums.includes(num)))
         if(
             playerCells.length > 2 && 
             playerCells.some(num => necessaryNums.includes(num))
         ){
-        console.log("I was triggered part 2")
-        if(hasWinningCombo(playerCells, winningCombinations)){
-            console.log("I was triggered part 3")
-
-            console.log(`${!isMyTurn ? "Current Player " : "Opponent "} WON, player moves ${playerCells}`)
-            setGameStarted(false)
-            setGameOver(true)
-            return true
-        }
+            if(hasWinningCombo(playerCells, winningCombinations)){
+                setGameOver(true);
+                return true;
+            }
         }
         return false;
     }
@@ -125,10 +116,17 @@ function Home({roomId}){
                 1:p1Cells,
                 2:p2Cells
             }
+            
+            // First check for win condition before sending the message
+            const hasWon = checkWin(p1Cells) || checkWin(p2Cells);
+            
+            // Always send the message to keep other player in sync
             sendJsonMessage(msg)
-            // Check win for both players and stop further checking if a win is found
-            if (checkWin(p1Cells) || checkWin(p2Cells)) {
-                return; // Exit early if someone won
+            
+            // If there's a win, don't update any other states
+            if (hasWon) {
+                setGameStarted(false);
+                return;
             }
         }
     }, [p1Cells, p2Cells])
@@ -136,14 +134,17 @@ function Home({roomId}){
     //use Use effect
     useEffect(() => {
         if (lastJsonMessage !== null) {
-            figureOutTurn(lastJsonMessage)
             updateCells(lastJsonMessage)
+            figureOutTurn(lastJsonMessage)
         }
     }, [lastJsonMessage]);
     
     return(
         <>
-            <InfoBoard />
+            <InfoBoard 
+                isMyTurn = {isMyTurn}
+                gameOver = {gameOver}
+            />
             <div className="board">
                 {
                 cells.map((id) => (
