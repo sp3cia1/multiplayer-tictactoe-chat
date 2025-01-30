@@ -3,23 +3,21 @@ import InfoBoard from "./components/InfoBoard"
 import Cell from "./components/cell"
 import useWebSocket from 'react-use-websocket';
 
-
-
-
 function Home({roomId}){
     const cells = [1,2,3,4,5,6,7,8,9]
-    // const necessaryNums = [3,5,7] //every winning combination includes these numbers
-    // const winningCombinations =[
-    //     [3,5,7],[1,5,9],
-    //     [1,2,3],[4,5,6],[7,8,9],
-    //     [3,6,9],[2,5,8],[1,4,7]
-    // ]
+    const necessaryNums = [3,5,7] //every winning combination includes these numbers
+    const winningCombinations =[
+        [3,5,7],[1,5,9],
+        [1,2,3],[4,5,6],[7,8,9],
+        [3,6,9],[2,5,8],[1,4,7]
+    ]
     const [p1Cells, setP1Cells] = useState([])
     const [p2Cells, setP2Cells] = useState([])
     const [gameStarted, setGameStarted] = useState(false)
     const [player, setPlayer] = useState(null) //1 or 2
     const [isMyTurn, setIsMyTurn] = useState(false)
-    console.log("I am Player ", player)
+    const [gameOver, setGameOver] = useState(false);
+    // console.log("I am Player ", player)
     
     const WS_URL = "ws://localhost:8000"
     const { sendJsonMessage, lastJsonMessage } = useWebSocket(WS_URL, {
@@ -27,7 +25,7 @@ function Home({roomId}){
     })
 
     function handleClick(id) {
-        if (gameStarted && isMyTurn){
+        if (gameStarted && isMyTurn && !gameOver){
             if(player === 1){
                 const updatedP1Cells = [...p1Cells,id];
                 setP1Cells(updatedP1Cells)
@@ -44,7 +42,9 @@ function Home({roomId}){
         const players = Object.keys(message);
 
         if (players.length === 2) {
-            setGameStarted(true);
+            if (!gameOver) { // Only start the game if it's not over, without this the gameStarted was automatically set to true after we set it to false.
+                setGameStarted(true);
+            }
         }
         
         if (!player) {
@@ -74,7 +74,6 @@ function Home({roomId}){
 
     const updateCells = (msg) => {
         if(gameStarted){
-            console.log("Message length", msg[1].length)
             if(msg[1].length !== p1Cells.length){
                 setP1Cells(msg[1])
             }
@@ -84,23 +83,53 @@ function Home({roomId}){
         }
     }
 
+    //helper function to check for winning combos
+    const hasWinningCombo = (playerMoves, winningCombos) => {
+        return winningCombos.some(combo => combo.every(num => playerMoves.includes(num)));
+    };
+
+    function checkWin(playerCells){
+        console.log("I was triggered")
+        console.log("player cells", playerCells )
+        console.log("player cells length", playerCells.length > 2 )
+        console.log("contains", playerCells.some(num => necessaryNums.includes(num)))
+        if(
+            playerCells.length > 2 && 
+            playerCells.some(num => necessaryNums.includes(num))
+        ){
+        console.log("I was triggered part 2")
+        if(hasWinningCombo(playerCells, winningCombinations)){
+            console.log("I was triggered part 3")
+
+            console.log(`${!isMyTurn ? "Current Player " : "Opponent "} WON, player moves ${playerCells}`)
+            setGameStarted(false)
+            setGameOver(true)
+            return true
+        }
+        }
+        return false;
+    }
+
     useEffect(() => {
         console.log('Game Status:', {
             player,
             gameStarted,
-            isMyTurn
+            isMyTurn,
+            gameOver
         });
-    }, [player, gameStarted, isMyTurn]);
+    }, [player, gameStarted, isMyTurn, gameOver]);
 
     useEffect(() => {
-        console.log("I was triggered")
         if(gameStarted && player){
             const msg = {
                 1:p1Cells,
                 2:p2Cells
             }
             sendJsonMessage(msg)
-            console.log("sending message", msg)
+            // Check win for both players and stop further checking if a win is found
+            if (checkWin(p1Cells) || checkWin(p2Cells)) {
+                return; // Exit early if someone won
+            }
         }
     }, [p1Cells, p2Cells])
 
