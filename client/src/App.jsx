@@ -29,7 +29,7 @@ function App() {
   //     }
   //   }
   // }
-
+  
   // //helper function to check for winning combos
   // const hasWinningCombo = (playerMoves, winningCombos) => {
   //   return winningCombos.some(combo => combo.every(num => playerMoves.includes(num)));
