@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import InfoBoard from "./components/InfoBoard"
 import Cell from "./components/cell"
 import ChatButton from "./components/ChatButton";
+import ChatBox from "./components/ChatBox";
 import useWebSocket from 'react-use-websocket';
 
 function Home({roomId}){
@@ -18,6 +19,14 @@ function Home({roomId}){
     const [player, setPlayer] = useState(null) //1 or 2
     const [isMyTurn, setIsMyTurn] = useState(false)
     const [gameOver, setGameOver] = useState(false);
+    const isChatOpen = true
+    const [messages, setMessages] = useState([
+        { text: "Hi", sender: "opponent" },
+        { text: "Hello", sender: "player" },
+        { text: "I'm good", sender: "opponent" },
+        { text: "How are you", sender: "player" }
+      ]);
+      
     // console.log("I am Player ", player)
     
     const WS_URL = "ws://localhost:8000"
@@ -159,9 +168,14 @@ function Home({roomId}){
                 ))
                 }
             </div>
-            <div>
-                <ChatButton gameStarted={gameStarted} gameOver={gameOver}/>
+            <div className='chat-wrapper'>
+                {isChatOpen ? (
+                    <ChatBox messages = {messages}/>
+                ) : (
+                    <ChatButton gameStarted={gameStarted} gameOver={gameOver}/>
+                )}
             </div>
+
         </>
     )
 }
