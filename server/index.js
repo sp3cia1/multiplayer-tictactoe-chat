@@ -22,11 +22,23 @@ function broadcast(roomId){
 }
 
 // message = {"1": [], "2":[]}
+//or
+// message = {"player":1,"message":"Hello"}
 const handleMessage = (bytes, roomId) => {
     const message = JSON.parse(bytes)
-    playerMoves[roomId] = message
-    console.log("Message received on server", message)
-    broadcast(roomId)
+    if(!message.player){
+        playerMoves[roomId] = message
+        console.log("Message received on server", message)
+        console.log("Player Moves ", playerMoves)
+        broadcast(roomId)
+    } else{
+        Object.keys(rooms[roomId]).forEach(player => {
+            const connection = rooms[roomId][player]
+            const msg = JSON.stringify(message)
+            connection.send(msg)
+            console.log("sent message from server", msg)
+        })
+    }
 }
 
 const handleClose = (roomId) => {
@@ -53,7 +65,6 @@ const handleClose = (roomId) => {
 wss.on('connection', (connection, request) =>{
 
     const { roomId } = url.parse(request.url, true).query
-    let player
 
     if(rooms[roomId]){ //if this roomId already exists
 
