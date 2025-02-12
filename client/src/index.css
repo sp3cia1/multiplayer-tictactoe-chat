@@ -48,6 +48,10 @@ body{
     justify-content: space-between;
 }
 
+.info-board i{
+    animation: spin 1.5s linear infinite;
+}
+
 .restart-button {
     background-color: aliceblue;
     color: #2091F6;
@@ -104,6 +108,60 @@ body{
     padding-bottom: 0.35em;
 }
 
+.chat-wrapper {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 1000;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.chat-button {
+    background: #2091F6;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 0.8rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(32, 145, 246, 0.2);
+}
+
+.chat-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(32, 145, 246, 0.3);
+}
+
+.chat-button i {
+    font-size: 2.2rem;
+}
+
+.chat-waiting {
+    background: #e0e0e0;
+    color: #666;
+    border-radius: 12px;
+    padding: 0.8rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.chat-waiting i {
+    font-size: 2.2rem;
+    animation: spin 1.5s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
 /* Responsive Styles */
 @media (max-width: 600px) {
     body {
@@ -122,11 +180,21 @@ body{
         height: 3em;
     }
     .info-board {
-        font-size: 1.5em;
+        font-size: 1.3em;
         padding: 0.5em;
     }
     .login-container {
         max-width: 350px;
         font-size: 1.2em;
+    }
+    .chat-wrapper {
+        bottom: 1rem;
+        right: 1rem;
+    }
+
+    .chat-button,
+    .chat-waiting {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
     }
 }

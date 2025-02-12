@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import InfoBoard from "./components/InfoBoard"
 import Cell from "./components/cell"
+import Chat from "./components/Chat";
 import useWebSocket from 'react-use-websocket';
 
 function Home({roomId}){
@@ -157,6 +158,9 @@ function Home({roomId}){
                     />
                 ))
                 }
+            </div>
+            <div>
+                <Chat gameStarted={gameStarted} gameOver={gameOver}/>
             </div>
         </>
     )
