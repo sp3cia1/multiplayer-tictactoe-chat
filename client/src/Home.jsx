@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import InfoBoard from "./components/InfoBoard"
 import Cell from "./components/cell"
-import Chat from "./components/Chat";
+import ChatButton from "./components/ChatButton";
 import useWebSocket from 'react-use-websocket';
 
 function Home({roomId}){
@@ -132,7 +132,7 @@ function Home({roomId}){
         }
     }, [p1Cells, p2Cells])
 
-    //use Use effect
+    //use Use effect whenever a new message is received
     useEffect(() => {
         if (lastJsonMessage !== null) {
             updateCells(lastJsonMessage)
@@ -160,7 +160,7 @@ function Home({roomId}){
                 }
             </div>
             <div>
-                <Chat gameStarted={gameStarted} gameOver={gameOver}/>
+                <ChatButton gameStarted={gameStarted} gameOver={gameOver}/>
             </div>
         </>
     )

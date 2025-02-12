@@ -23,10 +23,10 @@ function broadcast(roomId){
 
 // message = {"1": [], "2":[]}
 //or
-// message = {"player":1,"message":"Hello"}
+// message = {"sender":1,"message":"Hello"}
 const handleMessage = (bytes, roomId) => {
     const message = JSON.parse(bytes)
-    if(!message.player){
+    if(!message.sender){
         playerMoves[roomId] = message
         console.log("Message received on server", message)
         console.log("Player Moves ", playerMoves)
