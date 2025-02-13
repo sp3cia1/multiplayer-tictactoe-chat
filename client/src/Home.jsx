@@ -19,7 +19,7 @@ function Home({roomId}){
     const [player, setPlayer] = useState(null) //1 or 2
     const [isMyTurn, setIsMyTurn] = useState(false)
     const [gameOver, setGameOver] = useState(false);
-    const isChatOpen = true
+    const [isChatOpen, setIsChatOpen] = useState(false)
     const [messages, setMessages] = useState([
         // { text: "Hi", sender: "opponent" },
         // { text: "Hello", sender: "player" },
@@ -98,6 +98,10 @@ function Home({roomId}){
             "text":message.text,
             "sender" : (message.sender == player) ? "player" : "opponent"
         }])
+    }
+
+    function handleChatOpen(){
+        setIsChatOpen(!isChatOpen)
     }
 
     //helper function to check for winning combos
@@ -181,9 +185,9 @@ function Home({roomId}){
             </div>
             <div className='chat-wrapper'>
                 {isChatOpen ? (
-                    <ChatBox messages = {messages} sendJsonMessage={sendJsonMessage} player={player}/>
+                    <ChatBox messages = {messages} sendJsonMessage={sendJsonMessage} player={player} handleChatOpen={handleChatOpen}/>
                 ) : (
-                    <ChatButton gameStarted={gameStarted} gameOver={gameOver}/>
+                    <ChatButton gameStarted={gameStarted} gameOver={gameOver} handleChatOpen={handleChatOpen}/>
                 )}
             </div>
 
