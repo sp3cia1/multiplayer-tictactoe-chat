@@ -21,10 +21,10 @@ function Home({roomId}){
     const [gameOver, setGameOver] = useState(false);
     const isChatOpen = true
     const [messages, setMessages] = useState([
-        { text: "Hi", sender: "opponent" },
-        { text: "Hello", sender: "player" },
-        { text: "I'm good", sender: "opponent" },
-        { text: "How are you", sender: "player" }
+        // { text: "Hi", sender: "opponent" },
+        // { text: "Hello", sender: "player" },
+        // { text: "I'm good", sender: "opponent" },
+        // { text: "How are you", sender: "player" }
       ]);
       
     // console.log("I am Player ", player)
@@ -93,6 +93,13 @@ function Home({roomId}){
         }
     }
 
+    function handleTextMessage(message){
+        setMessages([...messages, {
+            "text":message.text,
+            "sender" : (message.sender == player) ? "player" : "opponent"
+        }])
+    }
+
     //helper function to check for winning combos
     const hasWinningCombo = (playerMoves, winningCombos) => {
         return winningCombos.some(combo => combo.every(num => playerMoves.includes(num)));
@@ -144,8 +151,12 @@ function Home({roomId}){
     //use Use effect whenever a new message is received
     useEffect(() => {
         if (lastJsonMessage !== null) {
-            updateCells(lastJsonMessage)
-            figureOutTurn(lastJsonMessage)
+            if(lastJsonMessage.sender){
+                handleTextMessage(lastJsonMessage)
+            }else{
+                updateCells(lastJsonMessage)
+                figureOutTurn(lastJsonMessage)
+            }
         }
     }, [lastJsonMessage]);
     
@@ -170,7 +181,7 @@ function Home({roomId}){
             </div>
             <div className='chat-wrapper'>
                 {isChatOpen ? (
-                    <ChatBox messages = {messages}/>
+                    <ChatBox messages = {messages} sendJsonMessage={sendJsonMessage} player={player}/>
                 ) : (
                     <ChatButton gameStarted={gameStarted} gameOver={gameOver}/>
                 )}

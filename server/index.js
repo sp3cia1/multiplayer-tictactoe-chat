@@ -23,7 +23,7 @@ function broadcast(roomId){
 
 // message = {"1": [], "2":[]}
 //or
-// message = {"sender":1,"message":"Hello"}
+// message = {"text":"Hello", "sender":1}
 const handleMessage = (bytes, roomId) => {
     const message = JSON.parse(bytes)
     if(!message.sender){
@@ -38,6 +38,7 @@ const handleMessage = (bytes, roomId) => {
             connection.send(msg)
             console.log("sent message from server", msg)
         })
+        // console.log("received message ", message)
     }
 }
 
