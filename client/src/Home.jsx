@@ -5,7 +5,7 @@ import ChatButton from "./components/ChatButton";
 import ChatBox from "./components/ChatBox";
 import useWebSocket from 'react-use-websocket';
 
-function Home({roomId}){
+function Home({roomId, handleRoomIdChange}){
     const cells = [1,2,3,4,5,6,7,8,9]
     const necessaryNums = [3,5,7] //every winning combination includes these numbers
     const winningCombinations =[
@@ -30,7 +30,7 @@ function Home({roomId}){
     // console.log("I am Player ", player)
     
     const WS_URL = "ws://localhost:8000"
-    const { sendJsonMessage, lastJsonMessage } = useWebSocket(WS_URL, {
+    const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(WS_URL, {
         queryParams: {roomId}
     })
 
@@ -124,12 +124,13 @@ function Home({roomId}){
 
     useEffect(() => {
         console.log('Game Status:', {
+            readyState,
             player,
             gameStarted,
             isMyTurn,
             gameOver
         });
-    }, [player, gameStarted, isMyTurn, gameOver]);
+    }, [player, gameStarted, isMyTurn, gameOver, readyState]);
 
     useEffect(() => {
         if(gameStarted && player){
@@ -163,6 +164,14 @@ function Home({roomId}){
             }
         }
     }, [lastJsonMessage]);
+
+    //useEffect to handle connection close
+    useEffect(() => {
+        if(readyState === 3) {
+            console.log('Cleaning up WebSocket connection');
+            handleRoomIdChange("");
+        }
+    }, [readyState])
     
     return(
         <>

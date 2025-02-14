@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-function Login({onSubmit}){
+function Login({handleRoomIdChange}){
     // const { roomId, setRoomId } = props
     //we cant directly set roomId here as in input when we are typing intially roomId will be empty but as soon as we write a single number setRoomId will be triggered and roomId will no longer be falsy and so Home component will be called.
     const [input, setInput] = useState("")
@@ -10,7 +10,7 @@ function Login({onSubmit}){
         e.preventDefault();
         if (/^\d{4}$/.test(input)) {
             setError("");
-            onSubmit(input)
+            handleRoomIdChange(input)
         } else {
             setError("Please enter a 4-digit number.");
         }

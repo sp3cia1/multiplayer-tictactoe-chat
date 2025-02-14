@@ -1,5 +1,5 @@
 
-import { useState } from "react"
+import { useState, useCallback } from "react"
 import Home from "./Home"
 import Login from "./components/Login"
 
@@ -13,10 +13,22 @@ function App() {
   //   setGameFinished(false)
   // }
 
+  const handleRoomIdChange = (newValue) => {
+    // if(newValue === ""){
+    //   setRoomId("")
+    // } else{
+      setRoomId(newValue)
+    // }
+  }
+
+//   const handleDisconnect = useCallback(() => {
+//     setRoomId("");
+// }, []);
+
   return roomId ? (
-      <Home roomId = {roomId}/>
+      <Home roomId = {roomId} handleRoomIdChange={handleRoomIdChange}/>
   ) : (
-    <Login onSubmit = {setRoomId}/>
+    <Login handleRoomIdChange={handleRoomIdChange}/>
   )
 }
 
