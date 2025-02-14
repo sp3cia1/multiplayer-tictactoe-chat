@@ -27,9 +27,12 @@ function broadcast(roomId){
 const handleMessage = (bytes, roomId) => {
     const message = JSON.parse(bytes)
     if(!message.sender){
-        playerMoves[roomId] = message
         console.log("Message received on server", message)
         console.log("Player Moves ", playerMoves)
+        if(JSON.stringify(playerMoves[roomId]) === JSON.stringify(message)){
+            return;
+        }
+        playerMoves[roomId] = message
         broadcast(roomId)
     } else{
         Object.keys(rooms[roomId]).forEach(player => {
