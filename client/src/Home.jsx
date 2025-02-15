@@ -3,6 +3,7 @@ import InfoBoard from "./components/InfoBoard"
 import Cell from "./components/cell"
 import ChatButton from "./components/ChatButton";
 import ChatBox from "./components/ChatBox";
+import InfoBox from "./components/InfoBox";
 import useWebSocket from 'react-use-websocket';
 
 function Home({roomId, handleRoomIdChange}){
@@ -20,12 +21,8 @@ function Home({roomId, handleRoomIdChange}){
     const [isMyTurn, setIsMyTurn] = useState(false)
     const [gameOver, setGameOver] = useState(false);
     const [isChatOpen, setIsChatOpen] = useState(false)
-    const [messages, setMessages] = useState([
-        // { text: "Hi", sender: "opponent" },
-        // { text: "Hello", sender: "player" },
-        // { text: "I'm good", sender: "opponent" },
-        // { text: "How are you", sender: "player" }
-      ]);
+    const [messages, setMessages] = useState([]);
+    // const [connection,]
       
     // console.log("I am Player ", player)
     
@@ -165,16 +162,19 @@ function Home({roomId, handleRoomIdChange}){
         }
     }, [lastJsonMessage]);
 
-    //useEffect to handle connection close
-    useEffect(() => {
-        if(readyState === 3) {
-            console.log('Cleaning up WebSocket connection');
-            handleRoomIdChange("");
-        }
-    }, [readyState])
+    // useEffect to handle connection close
+    // useEffect(() => {
+    //     if(readyState === 3) {
+    //         console.log('Cleaning up WebSocket connection');
+            
+    //         // handleRoomIdChange("");
+    //     }
+    // }, [readyState])
     
     return(
         <>
+            {readyState === 3 && <InfoBox handleRoomIdChange={handleRoomIdChange} />}
+
             <InfoBoard 
                 isMyTurn = {isMyTurn}
                 gameOver = {gameOver}
