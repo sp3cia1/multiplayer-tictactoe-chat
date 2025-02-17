@@ -13,8 +13,8 @@ const playerMoves= { }
 //{roomId:{1:[],2:[]}, roomId:{1:[],2:[]}}
 
 function broadcast(roomId){
-    Object.keys(rooms[roomId]).forEach(player => {
-        const connection = rooms[roomId][player]
+    Object.keys(rooms[roomId].players).forEach(player => {
+        const connection = rooms[roomId].players[player]
         const msg = JSON.stringify(playerMoves[roomId])
         connection.send(msg)
         console.log("sent message from server", msg)
@@ -24,6 +24,8 @@ function broadcast(roomId){
 // message = {"1": [], "2":[]}
 //or
 // message = {"text":"Hello", "sender":1}
+//or
+//messsage = {"rematch":boolean, "sender":1}
 const handleMessage = (bytes, roomId) => {
     const message = JSON.parse(bytes)
     if(!message.sender){
@@ -35,12 +37,38 @@ const handleMessage = (bytes, roomId) => {
         playerMoves[roomId] = message
         broadcast(roomId)
     } else{
-        Object.keys(rooms[roomId]).forEach(player => {
-            const connection = rooms[roomId][player]
-            const msg = JSON.stringify(message)
-            connection.send(msg)
-            console.log("sent message from server", msg)
-        })
+        if(!message.text){ //if we dont have a text key field this means this is a rematch request message
+            if(message.rematch){ // if rematch = true in messsage
+                if(rooms[roomId].rematch){
+                    console.log("working for true and when remactb is 1")
+                    //clear player moves and restart game
+                    playerMoves[roomId] = {
+                        1:[],
+                        2:[]
+                    }
+                    rooms[roomId].rematch = 0
+                } else{
+                    rooms[roomId].rematch++;
+                }
+            } else{
+                rooms[roomId].rematch = 0
+            }
+            //send the rematch message to the other player apart from sender
+            Object.keys(rooms[roomId].players).forEach(player => {
+                if(player != message.sender){ //player is string and message.sender is number so we not doing strict comparison here 
+                    const connection = rooms[roomId].players[player]
+                    const msg = JSON.stringify(message)
+                    connection.send(msg)
+                }
+            })
+        } else{
+            Object.keys(rooms[roomId].players).forEach(player => {
+                const connection = rooms[roomId].players[player]
+                const msg = JSON.stringify(message)
+                connection.send(msg)
+                console.log("sent message from server", msg)
+            })
+        }
         // console.log("received message ", message)
     }
 }
@@ -51,8 +79,8 @@ const handleClose = (roomId) => {
     // Delete the first player's moves from the room
     delete playerMoves[roomId][firstPlayer]
     //everytime a player disconnects this code is called and we close both player connections so for the player who didnt close his connection the connection.on(close) function is called for him and this code is called again so if we deleted roomId from rooms here then when it tries to close from here again it wont find the connection to call the .close() function on and throw an error.
-    Object.keys(rooms[roomId]).forEach(player => {
-        rooms[roomId][player].close()
+    Object.keys(rooms[roomId].players).forEach(player => {
+        rooms[roomId].players[player].close()
     })
     // console.log(playerMoves)
     // console.log(Object.keys(playerMoves[roomId]).length)
@@ -72,10 +100,11 @@ wss.on('connection', (connection, request) =>{
 
     if(rooms[roomId]){ //if this roomId already exists
 
-        if(Object.keys(rooms[roomId]).length < 2){
+        if(Object.keys(rooms[roomId].players).length < 2){
             //If there are less then 2 players
-            rooms[roomId][2] = connection
+            rooms[roomId].players[2] = connection
             console.log('Another player connected')
+            console.log("room after p2 coonected", rooms)
             playerMoves[roomId] = {
                 1:[],
                 2:[]
@@ -92,10 +121,11 @@ wss.on('connection', (connection, request) =>{
         }
     } else{
         rooms[roomId]={
-            1:connection,
+            "players":{1:connection},
+            "rematch":0
         }
         console.log('Player 1 connected')
-        // console.log(rooms)
+        console.log("room after p1 coonected", rooms)
         // console.log(Object.keys(rooms[roomId]).length)
         playerMoves[roomId] = {
             1:[],
