@@ -22,6 +22,7 @@ function Home({roomId, handleRoomIdChange}){
     const [gameOver, setGameOver] = useState(false);
     const [isChatOpen, setIsChatOpen] = useState(false)
     const [messages, setMessages] = useState([]);
+    const [restart, setRestart] = useState(false)
     // const [connection,]
       
     // console.log("I am Player ", player)
@@ -161,15 +162,6 @@ function Home({roomId, handleRoomIdChange}){
             }
         }
     }, [lastJsonMessage]);
-
-    // useEffect to handle connection close
-    // useEffect(() => {
-    //     if(readyState === 3) {
-    //         console.log('Cleaning up WebSocket connection');
-            
-    //         // handleRoomIdChange("");
-    //     }
-    // }, [readyState])
     
     return(
         <>
@@ -178,6 +170,10 @@ function Home({roomId, handleRoomIdChange}){
             <InfoBoard 
                 isMyTurn = {isMyTurn}
                 gameOver = {gameOver}
+                sendJsonMessage = {sendJsonMessage}
+                player = {player}
+                restart = {restart}
+                setRestart = {setRestart}
             />
             <div className="board">
                 {
