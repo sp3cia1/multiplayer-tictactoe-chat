@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useRef} from 'react'
 
 function InfoBox({handleRoomIdChange}) {
-    const [timer, setTime] = useState(3);
+    const [timer, setTime] = useState(5);
     const intervalId = useRef(null);
 
     useEffect(() => {

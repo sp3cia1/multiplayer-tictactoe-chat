@@ -48,11 +48,13 @@ const handleMessage = (bytes, roomId) => {
                     }
                     rooms[roomId].rematch = 0
                 } else{
+                    console.log("working for true and when remactb is 0")
                     rooms[roomId].rematch++;
                 }
             } else{
                 rooms[roomId].rematch = 0
             }
+            console.log("message ", message)
             //send the rematch message to the other player apart from sender
             Object.keys(rooms[roomId].players).forEach(player => {
                 if(player != message.sender){ //player is string and message.sender is number so we not doing strict comparison here 
