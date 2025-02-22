@@ -1,6 +1,6 @@
 export default function InfoBoard (props) {
 
-    const { isMyTurn, gameOver, sendJsonMessage, player, restart, setRestart } = props;
+    const { isMyTurn, gameOver, sendJsonMessage, player, restart, setRestart, receivedRequest, setReceivedRequest } = props;
 
     function handleRestartClick(){
         if(!restart){
@@ -17,25 +17,43 @@ export default function InfoBoard (props) {
     return(
         <div className="info-board">
 
-        {restart ? (
-            "Rematch Requested, Waiting for Opponnet"
+        {receivedRequest ? (
+            <>
+            <div>
+                <span>Restart Requested </span>
+            </div>
+            <button className="infoboard-button">
+                Accept
+            </button>
+            <button className="infoboard-button">
+                Reject
+            </button>
+            </>
         ) : (
             <>
-                {gameOver ? (
-                    isMyTurn ? "Damn! You Lost" : "Yay! You Won"
+                {restart ? (
+                    "Rematch Requested, Waiting for Opponnet"
                 ) : (
-                    isMyTurn ? "Your Turn" : (
-                        <div>
-                            <i className="ph ph-spinner-gap"></i>
-                            <span>Waiting for Opponnet...</span>
-                        </div>
-                    )
+                    <>
+                        {gameOver ? (
+                            isMyTurn ? "Damn! You Lost" : "Yay! You Won"
+                        ) : (
+                            isMyTurn ? "Your Turn" : (
+                                <div>
+                                    <i className="ph ph-spinner-gap"></i>
+                                    <span>Waiting for Opponnet...</span>
+                                </div>
+                            )
+                        )}
+                        <button className="infoboard-button" onClick={handleRestartClick}>
+                            Restart Game
+                        </button>
+                    </>
                 )}
-                <button className="restart-button" onClick={handleRestartClick}>
-                    Restart Game
-                </button>
             </>
         )}
+
+        
       
     </div>
     )

@@ -52,7 +52,7 @@ body{
     animation: spin 1.5s linear infinite;
 }
 
-.restart-button {
+.infoboard-button {
     background-color: aliceblue;
     color: #2091F6;
     border: none;

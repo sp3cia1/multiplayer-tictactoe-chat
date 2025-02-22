@@ -23,6 +23,7 @@ function Home({roomId, handleRoomIdChange}){
     const [isChatOpen, setIsChatOpen] = useState(false)
     const [messages, setMessages] = useState([]);
     const [restart, setRestart] = useState(false)
+    const [receivedRequest, setReceivedRequest] = useState(true)
     // const [connection,]
       
     // console.log("I am Player ", player)
@@ -174,6 +175,8 @@ function Home({roomId, handleRoomIdChange}){
                 player = {player}
                 restart = {restart}
                 setRestart = {setRestart}
+                receivedRequest = {receivedRequest}
+                setReceivedRequest = {setReceivedRequest}
             />
             <div className="board">
                 {
