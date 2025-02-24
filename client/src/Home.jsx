@@ -23,7 +23,7 @@ function Home({roomId, handleRoomIdChange}){
     const [isChatOpen, setIsChatOpen] = useState(false)
     const [messages, setMessages] = useState([]);
     const [restart, setRestart] = useState(false)
-    const [receivedRequest, setReceivedRequest] = useState(true)
+    const [receivedRequest, setReceivedRequest] = useState(false)
     // const [connection,]
       
     // console.log("I am Player ", player)
@@ -121,15 +121,21 @@ function Home({roomId, handleRoomIdChange}){
         return false;
     }
 
+    function handleRestart(){
+        console.log("we will handle restart here")
+    }
+
     useEffect(() => {
         console.log('Game Status:', {
             readyState,
             player,
             gameStarted,
             isMyTurn,
-            gameOver
+            gameOver,
+            restart,
+            receivedRequest
         });
-    }, [player, gameStarted, isMyTurn, gameOver, readyState]);
+    }, [player, gameStarted, isMyTurn, gameOver, readyState, restart,receivedRequest]);
 
     useEffect(() => {
         if(gameStarted && player){
@@ -156,7 +162,21 @@ function Home({roomId, handleRoomIdChange}){
     useEffect(() => {
         if (lastJsonMessage !== null) {
             if(lastJsonMessage.sender){
-                handleTextMessage(lastJsonMessage)
+                if(lastJsonMessage.text){
+                    handleTextMessage(lastJsonMessage)
+                }else{
+                    if(restart){//already had requested rematch and handling response here
+                        console.log("restart was true and received this message on client ", lastJsonMessage)
+                        if(lastJsonMessage.rematch){
+                            handleRestart()
+                        }else{
+                            setRestart(false)
+                        }
+                    } else{
+                        console.log("restart was false and received this message on client ", lastJsonMessage)
+                        setReceivedRequest(true)
+                    }
+                }
             }else{
                 updateCells(lastJsonMessage)
                 figureOutTurn(lastJsonMessage)
@@ -177,6 +197,7 @@ function Home({roomId, handleRoomIdChange}){
                 setRestart = {setRestart}
                 receivedRequest = {receivedRequest}
                 setReceivedRequest = {setReceivedRequest}
+                handleRestart = {handleRestart}
             />
             <div className="board">
                 {

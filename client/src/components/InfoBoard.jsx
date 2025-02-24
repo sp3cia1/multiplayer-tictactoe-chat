@@ -1,15 +1,29 @@
 export default function InfoBoard (props) {
 
-    const { isMyTurn, gameOver, sendJsonMessage, player, restart, setRestart, receivedRequest, setReceivedRequest } = props;
+    const { isMyTurn, gameOver, sendJsonMessage, player, restart, setRestart, receivedRequest, setReceivedRequest, handleRestart } = props;
 
-    function handleRestartClick(){
-        if(!restart){
-            const message = {
-                "rematch" : true,
-                "sender" : player
+    function handleRestartClick(choice){
+        if(!restart){ //if restart is false tehn only you can send restart messages 
+            let message
+            if(choice){
+                message = {
+                    "rematch" : true,
+                    "sender" : player
+                }
+                setRestart(true)
+                if(receivedRequest){ //only restart for the second client here as for the client who requested restart handled in home.
+                    handleRestart()
+                }
+            } else{
+                message = {
+                    "rematch" : false,
+                    "sender" : player
+                }
+                setReceivedRequest(false)
             }
-            setRestart(true)
             sendJsonMessage(message)
+            console.log("sent message ", message)
+            console.log("restart ", restart)
         }
 
     }
@@ -22,17 +36,17 @@ export default function InfoBoard (props) {
             <div>
                 <span>Restart Requested </span>
             </div>
-            <button className="infoboard-button">
+            <button className="infoboard-button" onClick={() => handleRestartClick(true)}>
                 Accept
             </button>
-            <button className="infoboard-button">
+            <button className="infoboard-button" onClick={() => handleRestartClick(false)}>
                 Reject
             </button>
             </>
         ) : (
             <>
                 {restart ? (
-                    "Rematch Requested, Waiting for Opponnet"
+                    "Rematch Requested, Waiting..."
                 ) : (
                     <>
                         {gameOver ? (
@@ -45,7 +59,7 @@ export default function InfoBoard (props) {
                                 </div>
                             )
                         )}
-                        <button className="infoboard-button" onClick={handleRestartClick}>
+                        <button className="infoboard-button" onClick={() => handleRestartClick(true)}>
                             Restart Game
                         </button>
                     </>
