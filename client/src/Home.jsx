@@ -121,8 +121,14 @@ function Home({roomId, handleRoomIdChange}){
         return false;
     }
 
-    function handleRestart(){
-        console.log("we will handle restart here")
+    function handleRestart(){ 
+        setP1Cells([]);
+        setP2Cells([]);
+        setGameOver(false);
+        setGameStarted(true);
+        setIsMyTurn(player === 1); // Player 1 starts first
+        setRestart(false);
+        setReceivedRequest(false);
     }
 
     useEffect(() => {
