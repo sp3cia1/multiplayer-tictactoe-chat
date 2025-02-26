@@ -10,11 +10,14 @@ function App() {
       setRoomId(newValue)
   }
 
-  return roomId ? (
-      <Home roomId = {roomId} handleRoomIdChange={handleRoomIdChange}/>
-  ) : (
-    <Login handleRoomIdChange={handleRoomIdChange}/>
-  )
+  return <>
+    <header className="game-header" onClick={()=>{handleRoomIdChange("")}}>TicTacToe</header>
+    {roomId ? (
+        <Home roomId = {roomId} handleRoomIdChange={handleRoomIdChange}/>
+    ) : (
+      <Login handleRoomIdChange={handleRoomIdChange}/>
+    )}
+  </>
 }
 
 export default App
