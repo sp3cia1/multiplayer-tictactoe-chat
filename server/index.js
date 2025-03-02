@@ -5,7 +5,7 @@ const url = require('url')
 const server = http.createServer();
 const wss = new WebSocketServer({server})
 
-const PORT = 8000
+const PORT = process.env.PORT || 8000
 
 const rooms = { }
 //{roomId:{1:connection,2:connection}, roomId:{1:connection,2:connection}}
