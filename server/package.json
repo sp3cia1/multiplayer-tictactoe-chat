@@ -12,7 +12,6 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "server": "file:",
         "ws": "^8.18.0"
     },
     "devDependencies": {
