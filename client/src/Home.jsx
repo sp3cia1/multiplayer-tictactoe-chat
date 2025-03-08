@@ -28,7 +28,7 @@ function Home({roomId, handleRoomIdChange}){
       
     // console.log("I am Player ", player)
     
-    const WS_URL = "ws://localhost:8000"
+    const WS_URL = "wss://multiplayer-tictactoe-chat.onrender.com"
     const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(WS_URL, {
         queryParams: {roomId}
     })
