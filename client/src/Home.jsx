@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import InfoBoard from "./components/InfoBoard"
-import Cell from "./components/cell"
+import Cell from "./components/Cell"
 import ChatButton from "./components/ChatButton";
 import ChatBox from "./components/ChatBox";
 import InfoBox from "./components/InfoBox";
