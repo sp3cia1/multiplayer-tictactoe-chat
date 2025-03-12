@@ -1,5 +1,7 @@
 # Real-time Multiplayer Tic Tac Toe with WebSocket Chat
 
+Check it out here :- https://tictactoe-multiplayer-chat.netlify.app/
+
 ## Overview
 
 This project is a **real-time, browser-based Multiplayer Tic Tac Toe game** that allows two players to compete against each other interactively over the internet.  A key feature of this application is its **real-time communication** powered by **WebSockets**, enabling seamless and instantaneous gameplay updates and in-game chat.
